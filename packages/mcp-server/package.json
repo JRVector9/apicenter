@@ -1,0 +1,30 @@
+{
+  "name": "@apicenter/mcp-server",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "MCP Server for API Center — enables Claude Code secret management",
+  "main": "./dist/index.js",
+  "bin": {
+    "apicenter-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@apicenter/core": "workspace:*",
+    "@apicenter/provider-dotenv": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.5.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "keywords": ["mcp", "secrets", "claude", "ai"],
+  "license": "MIT"
+}

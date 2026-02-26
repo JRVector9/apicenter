@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@apicenter/core": "workspace:*",
+    "@apicenter/mcp-server": "workspace:*",
     "@apicenter/provider-dotenv": "workspace:*",
     "@oclif/core": "^4.0.0",
     "cli-table3": "^0.6.5",
