@@ -1,0 +1,33 @@
+# API Center — Next.js Example
+# Run: apicenter pull  (downloads secrets to .env.local)
+version: "1"
+
+provider:
+  name: dotenv
+  config:
+    path: .env
+
+environments:
+  dev:
+    provider_env: development
+  staging:
+    provider_env: staging
+  prod:
+    provider_env: production
+
+default_env: dev
+
+output:
+  format: dotenv
+  path: .env.local
+
+scan:
+  include:
+    - "app/**"
+    - "src/**"
+    - "lib/**"
+    - "components/**"
+  exclude:
+    - "node_modules/**"
+    - ".next/**"
+    - "dist/**"

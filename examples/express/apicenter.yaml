@@ -1,0 +1,24 @@
+# API Center — Express.js Example
+# Run: apicenter pull  (downloads secrets to .env)
+version: "1"
+
+provider:
+  name: dotenv
+  config:
+    path: .env
+
+default_env: dev
+
+output:
+  format: dotenv
+  path: .env
+
+scan:
+  include:
+    - "src/**"
+    - "routes/**"
+    - "middleware/**"
+    - "config/**"
+  exclude:
+    - "node_modules/**"
+    - "dist/**"
