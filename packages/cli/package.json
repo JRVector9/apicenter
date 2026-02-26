@@ -19,13 +19,14 @@
     "@apicenter/core": "workspace:*",
     "@apicenter/provider-dotenv": "workspace:*",
     "@oclif/core": "^4.0.0",
+    "cli-table3": "^0.6.5",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "typescript": "^5.4.0",
-    "vitest": "^1.6.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
-    "@types/js-yaml": "^4.0.9"
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
   },
   "oclif": {
     "bin": "apicenter",
@@ -37,6 +38,12 @@
     "bin",
     "dist"
   ],
-  "keywords": ["secrets", "env", "cli", "dotenv", "vault"],
+  "keywords": [
+    "secrets",
+    "env",
+    "cli",
+    "dotenv",
+    "vault"
+  ],
   "license": "MIT"
 }
