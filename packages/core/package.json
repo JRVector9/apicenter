@@ -16,7 +16,8 @@
     "dev": "tsc --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "generate:schema": "node scripts/generate-schema.mjs"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
@@ -26,6 +27,7 @@
   "dependencies": {
     "glob": "^13.0.6",
     "js-yaml": "^4.1.0",
-    "zod": "^3.23.0"
+    "zod": "^3.23.0",
+    "zod-to-json-schema": "^3.25.1"
   }
 }

@@ -1,0 +1,139 @@
+{
+  "$ref": "#/definitions/ApicenterConfig",
+  "definitions": {
+    "ApicenterConfig": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1"
+        },
+        "provider": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "enum": [
+                "dotenv",
+                "infisical",
+                "vault",
+                "aws",
+                "doppler",
+                "1password"
+              ]
+            },
+            "config": {
+              "type": "object",
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        "environments": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "provider_env": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "provider_env"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "default_env": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "keys": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "keys"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "output": {
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "enum": [
+                "dotenv",
+                "json",
+                "yaml",
+                "toml"
+              ],
+              "default": "dotenv"
+            },
+            "path": {
+              "type": "string",
+              "default": ".env.local"
+            }
+          },
+          "additionalProperties": false
+        },
+        "scan": {
+          "type": "object",
+          "properties": {
+            "include": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "exclude": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "max_depth": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "mask_in_logs": {
+              "type": "boolean",
+              "default": true
+            },
+            "confirm_before_push": {
+              "type": "boolean",
+              "default": true
+            },
+            "gitignore_check": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "provider"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

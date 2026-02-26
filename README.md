@@ -154,10 +154,10 @@ npm install @apicenter/provider-infisical
 |----------|---------|--------|
 | `.env` file | built-in | ✅ Available |
 | Infisical | `@apicenter/provider-infisical` | ✅ Available |
-| HashiCorp Vault | `@apicenter/provider-vault` | 🔜 Phase 3 |
-| AWS Secrets Manager | `@apicenter/provider-aws` | 🔜 Phase 3 |
-| Doppler | `@apicenter/provider-doppler` | 🔜 Phase 3 |
-| 1Password | `@apicenter/provider-1password` | 🔜 Phase 3 |
+| HashiCorp Vault | `@apicenter/provider-vault` | ✅ Available |
+| AWS Secrets Manager | `@apicenter/provider-aws` | ✅ Available |
+| Doppler | `@apicenter/provider-doppler` | ✅ Available |
+| 1Password | `@apicenter/provider-1password` | 🔜 Phase 4 |
 
 ---
 

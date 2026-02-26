@@ -8,7 +8,8 @@ interface GenerateConfigOptions {
 export function generateConfig(opts: GenerateConfigOptions): string {
   const { provider, defaultEnv, outputPath = '.env.local', sourcePath = '.env' } = opts;
 
-  return `version: "1"
+  return `# yaml-language-server: $schema=https://unpkg.com/apicenter/schemas/apicenter.schema.json
+version: "1"
 
 provider:
   name: ${provider}
