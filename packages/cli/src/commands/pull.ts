@@ -2,6 +2,7 @@ import { Flags } from '@oclif/core';
 import { join } from 'node:path';
 import { BaseCommand } from '../base-command.js';
 import { writeDotenvFile } from '../utils/dotenv-io.js';
+import { SecretCache } from '@apicenter/core';
 
 export default class Pull extends BaseCommand {
   static description = 'Provider에서 시크릿을 가져와 로컬 .env 파일 생성';
@@ -9,6 +10,7 @@ export default class Pull extends BaseCommand {
     '<%= config.bin %> pull',
     '<%= config.bin %> pull --env staging',
     '<%= config.bin %> pull --dry-run',
+    '<%= config.bin %> pull --cache',
   ];
 
   static flags = {
@@ -24,6 +26,10 @@ export default class Pull extends BaseCommand {
       char: 'o',
       description: '출력 파일 경로',
     }),
+    cache: Flags.boolean({
+      description: 'Provider 접속 실패 시 로컬 캐시 사용',
+      default: false,
+    }),
   };
 
   async run(): Promise<void> {
@@ -32,10 +38,29 @@ export default class Pull extends BaseCommand {
 
     const env = flags.env ?? this.defaultEnv;
     const outputPath = join(process.cwd(), flags.output ?? this.outputPath);
+    const secretCache = new SecretCache();
 
     this.log(`🔄 ${env} 환경에서 시크릿 가져오는 중...`);
 
-    const secrets = await this.provider.pullAll(env);
+    let secrets: Record<string, string>;
+    try {
+      secrets = await this.provider.pullAll(env);
+      // 성공 시 캐시 업데이트
+      secretCache.save(this.config_.provider.name, env, secrets);
+    } catch (err) {
+      if (flags.cache) {
+        const cached = secretCache.load(this.config_.provider.name, env);
+        if (cached) {
+          this.log('⚠️  Provider 접속 실패 — 캐시에서 로드합니다.');
+          secrets = cached;
+        } else {
+          throw err;
+        }
+      } else {
+        throw err;
+      }
+    }
+
     const count = Object.keys(secrets).length;
 
     if (count === 0) {

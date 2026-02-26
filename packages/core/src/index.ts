@@ -5,3 +5,4 @@ export * from './scanner/index.js';
 export * from './security/index.js';
 export * from './registry/index.js';
 export * from './global-config/index.js';
+export * from './cache/index.js';
