@@ -1,0 +1,31 @@
+{
+  "name": "@apicenter/provider-vault",
+  "version": "0.3.0",
+  "description": "HashiCorp Vault provider adapter for apicenter",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["apicenter", "vault", "hashicorp", "secrets", "provider"],
+  "license": "MIT",
+  "dependencies": {
+    "@apicenter/core": "workspace:*",
+    "node-vault": "^0.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0",
+    "@types/node": "^20.0.0"
+  }
+}
