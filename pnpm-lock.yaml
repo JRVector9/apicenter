@@ -90,6 +90,25 @@ importers:
         specifier: ^1.6.0
         version: 1.6.1(@types/node@20.19.34)
 
+  packages/provider-infisical:
+    dependencies:
+      '@apicenter/core':
+        specifier: workspace:*
+        version: link:../core
+      '@infisical/sdk':
+        specifier: ^2.0.0
+        version: 2.3.5
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.34
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.1(@types/node@20.19.34)
+
 packages:
 
   '@colors/colors@1.5.0':
@@ -233,6 +252,82 @@ packages:
     engines: {node: '>=12'}
     cpu: [x64]
     os: [win32]
+
+  '@infisical/sdk-android-arm-eabi@2.3.5':
+    resolution: {integrity: sha512-7KGWJ5X/RV6sIHWt3mjNg+zykzYvbHIKmNKBHTTAOuULKpTIAoQyFD1q3XMylP2AaVh8BJtgVOODO4/Uxexlug==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [android]
+
+  '@infisical/sdk-android-arm64@2.3.5':
+    resolution: {integrity: sha512-jHCvwYYchtTWryAGX2MvddRVZFdGrdoakGTMrvPQ0ZyM1XnLo3Q9tb35RCjTTylE1q114OKGRymM2JZ10ygiRw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@infisical/sdk-darwin-arm64@2.3.5':
+    resolution: {integrity: sha512-UEe38OTxjlOMo2HVplmT6pmXwks0c9lckKDUKK/MNfp0H9n4RJKXd8jco1BeG713eNR7bX01Q2c74XgLJhf58Q==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@infisical/sdk-darwin-x64@2.3.5':
+    resolution: {integrity: sha512-mMz/1N+aZjvIXPHMnfl9DmyYWCXjRsa/Uxj94pXjJGZ3GMsANRTR08GVRI2S2XWMODiV5D9zY2mQ3/eY5E5Y/A==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@infisical/sdk-linux-arm-gnueabihf@2.3.5':
+    resolution: {integrity: sha512-GjVQNdv8aYn+mZgW/sRFirwb0iMRX7ShBC0N8MsgrSBxnSpH2nFiUFj8hFi2DOvR5NbJ+KQpabfvP0eodozKSg==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@infisical/sdk-linux-arm64-gnu@2.3.5':
+    resolution: {integrity: sha512-hclvvD1eAYB6JP58mo5TfBjE+vSGSv30fNuXeaheO4yOLfnaGyCCR6E6F96uxNNCAVkVO4RXRhiSSCT6K3f3jA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@infisical/sdk-linux-arm64-musl@2.3.5':
+    resolution: {integrity: sha512-RFYd49eXoUtXXUsQb9Cqiu0RKp32GrsEATj9GlMJYharDn8BZhYr6lpDb+7EZolbjg+A40JvT98nqN2EliUwgA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@infisical/sdk-linux-x64-gnu@2.3.5':
+    resolution: {integrity: sha512-E0JB4fowk9cmfQGBJw8QNXy9TBewB42kyQhCYARQtPvleXqoK48DUs7mzRIawLUbyCA5ldcy2jFbj/ZXWWYNOA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@infisical/sdk-linux-x64-musl@2.3.5':
+    resolution: {integrity: sha512-3+irZY69oepYAwXXgTUDIW6PbjLRmj79rzA4CSKfF3a0wBLlR+6e+1NT+nu87BtP3wSBej3y1JAnfw853AekDA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@infisical/sdk-win32-arm64-msvc@2.3.5':
+    resolution: {integrity: sha512-DVZMglFSE3Xqj7/Bsv/4KfhfAO970BsSdOL3LrlRvcN3Dkocuthh3rHw6U5jg92FfMw+hMN9DzlhTqtUBZWYjQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@infisical/sdk-win32-ia32-msvc@2.3.5':
+    resolution: {integrity: sha512-dw3XuR2myJ2leB3+KStFsHB2zIJ29TArvoU/zGw/cdCOj1dRKF7WcahWg1id+ydwoeOv+HVZ+RsS8sZR5gYblQ==}
+    engines: {node: '>= 10'}
+    cpu: [ia32]
+    os: [win32]
+
+  '@infisical/sdk-win32-x64-msvc@2.3.5':
+    resolution: {integrity: sha512-SWzYndKhHih4zE/OYWfv9QoYaj5oDBhNSKZAlw1XFYdlUU41nTCN1nruD9RRdmjoJ/pF0sn2Mr9v+OiXStnC+A==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@infisical/sdk@2.3.5':
+    resolution: {integrity: sha512-vaQmDyzOFRkiZqstifk2dHTctkfizhlv7/+Ds6PFVWPGUpRUqP4PoR4yRdx2405IKWVx/ABuqQ4S8e9ix1kwzg==}
+    engines: {node: '>= 10'}
 
   '@jest/schemas@29.6.3':
     resolution: {integrity: sha512-mo5j5X+jIZmJQveBKeS/clAueipV7KgiX1vMgCxam1RNYiqE1w62n0/tJJnHtjW8ZHcQco5gY85jA3mi0L+nSA==}
@@ -989,6 +1084,57 @@ snapshots:
 
   '@esbuild/win32-x64@0.21.5':
     optional: true
+
+  '@infisical/sdk-android-arm-eabi@2.3.5':
+    optional: true
+
+  '@infisical/sdk-android-arm64@2.3.5':
+    optional: true
+
+  '@infisical/sdk-darwin-arm64@2.3.5':
+    optional: true
+
+  '@infisical/sdk-darwin-x64@2.3.5':
+    optional: true
+
+  '@infisical/sdk-linux-arm-gnueabihf@2.3.5':
+    optional: true
+
+  '@infisical/sdk-linux-arm64-gnu@2.3.5':
+    optional: true
+
+  '@infisical/sdk-linux-arm64-musl@2.3.5':
+    optional: true
+
+  '@infisical/sdk-linux-x64-gnu@2.3.5':
+    optional: true
+
+  '@infisical/sdk-linux-x64-musl@2.3.5':
+    optional: true
+
+  '@infisical/sdk-win32-arm64-msvc@2.3.5':
+    optional: true
+
+  '@infisical/sdk-win32-ia32-msvc@2.3.5':
+    optional: true
+
+  '@infisical/sdk-win32-x64-msvc@2.3.5':
+    optional: true
+
+  '@infisical/sdk@2.3.5':
+    optionalDependencies:
+      '@infisical/sdk-android-arm-eabi': 2.3.5
+      '@infisical/sdk-android-arm64': 2.3.5
+      '@infisical/sdk-darwin-arm64': 2.3.5
+      '@infisical/sdk-darwin-x64': 2.3.5
+      '@infisical/sdk-linux-arm-gnueabihf': 2.3.5
+      '@infisical/sdk-linux-arm64-gnu': 2.3.5
+      '@infisical/sdk-linux-arm64-musl': 2.3.5
+      '@infisical/sdk-linux-x64-gnu': 2.3.5
+      '@infisical/sdk-linux-x64-musl': 2.3.5
+      '@infisical/sdk-win32-arm64-msvc': 2.3.5
+      '@infisical/sdk-win32-ia32-msvc': 2.3.5
+      '@infisical/sdk-win32-x64-msvc': 2.3.5
 
   '@jest/schemas@29.6.3':
     dependencies:

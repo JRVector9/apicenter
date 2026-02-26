@@ -1,9 +1,14 @@
 import { Command } from '@oclif/core';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { parseConfig, type ApicenterConfig } from '@apicenter/core';
+import { parseConfig, type ApicenterConfig, globalRegistry } from '@apicenter/core';
 import { DotenvProvider } from '@apicenter/provider-dotenv';
 import type { SecretProvider } from '@apicenter/core';
+
+// dotenv provider를 글로벌 레지스트리에 기본 등록
+globalRegistry.register('dotenv', (config) =>
+  new DotenvProvider({ path: (config['path'] as string) ?? '.env' }),
+);
 
 export abstract class BaseCommand extends Command {
   protected config_!: ApicenterConfig;
@@ -19,19 +24,34 @@ export abstract class BaseCommand extends Command {
     }
     const content = readFileSync(configPath, 'utf-8');
     this.config_ = parseConfig(content);
-    this.provider = this.resolveProvider();
+    this.provider = await this.resolveProvider();
   }
 
-  private resolveProvider(): SecretProvider {
+  private async resolveProvider(): Promise<SecretProvider> {
     const { name, config } = this.config_.provider;
-    switch (name) {
-      case 'dotenv':
-        return new DotenvProvider({
-          path: (config?.['path'] as string) ?? '.env',
-        });
-      default:
-        this.error(`Provider '${name}'은 아직 지원되지 않습니다.`, { exit: 1 });
+    const providerConfig = (config ?? {}) as Record<string, unknown>;
+
+    // 1. 글로벌 레지스트리에서 먼저 탐색
+    if (globalRegistry.has(name)) {
+      return globalRegistry.resolve(name, providerConfig);
     }
+
+    // 2. 동적 import 시도 (@apicenter/provider-{name})
+    try {
+      const module = await import(`@apicenter/provider-${name}`);
+      const ProviderClass = module.default ?? Object.values(module)[0];
+      if (typeof ProviderClass === 'function') {
+        return new ProviderClass(providerConfig) as SecretProvider;
+      }
+    } catch {
+      // 패키지가 설치되지 않음
+    }
+
+    this.error(
+      `Provider '${name}'을 찾을 수 없습니다.\n` +
+      `설치 후 다시 시도하세요: npm install @apicenter/provider-${name}`,
+      { exit: 1 },
+    );
   }
 
   protected get outputPath(): string {
