@@ -1,0 +1,42 @@
+{
+  "name": "apicenter",
+  "version": "0.1.0",
+  "description": "One CLI to manage secrets across any backend",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "apicenter": "./bin/run.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@apicenter/core": "workspace:*",
+    "@apicenter/provider-dotenv": "workspace:*",
+    "@oclif/core": "^4.0.0",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0",
+    "@types/node": "^20.0.0",
+    "@types/js-yaml": "^4.0.9"
+  },
+  "oclif": {
+    "bin": "apicenter",
+    "dirname": "apicenter",
+    "commands": "./dist/commands",
+    "plugins": []
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "keywords": ["secrets", "env", "cli", "dotenv", "vault"],
+  "license": "MIT"
+}
