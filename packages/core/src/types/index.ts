@@ -65,3 +65,18 @@ export class ApicenterError extends Error {
     this.name = 'ApicenterError';
   }
 }
+
+// 스캔 단건 매치 결과
+export interface ScanMatch {
+  key: string;
+  file: string;
+  line: number;
+  language: string;
+}
+
+// scan 명령어 전체 결과
+export interface ScanResult {
+  matches: ScanMatch[];
+  uniqueKeys: string[];
+  fileCount: number;
+}
