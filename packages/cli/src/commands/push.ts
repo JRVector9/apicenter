@@ -51,6 +51,10 @@ export default class Push extends BaseCommand {
 
     if (flags.keys) {
       const keyList = flags.keys.split(',').map((k) => k.trim());
+      const missingKeys = keyList.filter((k) => !(k in secrets));
+      if (missingKeys.length > 0) {
+        this.warn(`다음 키를 소스 파일에서 찾을 수 없습니다: ${missingKeys.join(', ')}`);
+      }
       secrets = Object.fromEntries(
         Object.entries(secrets).filter(([k]) => keyList.includes(k)),
       );

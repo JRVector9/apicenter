@@ -1,5 +1,6 @@
 import { Flags } from '@oclif/core';
 import { join } from 'node:path';
+import { existsSync } from 'node:fs';
 import { BaseCommand } from '../base-command.js';
 import { readDotenvFile } from '../utils/dotenv-io.js';
 import { computeDiff } from '../utils/diff-engine.js';
@@ -27,6 +28,9 @@ export default class Diff extends BaseCommand {
 
     this.log(`🔍 로컬 (${localPath}) ↔ remote (${env}) 비교 중...\n`);
 
+    if (!existsSync(localPath)) {
+      this.warn(`로컬 파일이 없습니다: ${localPath}\n먼저 \`apicenter pull\`을 실행하세요.`);
+    }
     const local = readDotenvFile(localPath);
     const remote = await this.provider.pullAll(env);
     const diffs = computeDiff(local, remote);

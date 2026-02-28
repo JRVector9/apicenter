@@ -50,9 +50,11 @@ export default class Rotate extends BaseCommand {
 
     this.log(`🔄 ${args.key} 로테이션 준비 중...`);
     this.log(`   환경: ${env}`);
-    this.log(
-      `   새 값: ${newValue.slice(0, 4)}${'*'.repeat(Math.min(newValue.length - 4, 20))} (${newValue.length}자)`,
-    );
+    const masked =
+      newValue.length <= 4
+        ? '****'
+        : `${newValue.slice(0, 4)}${'*'.repeat(Math.min(newValue.length - 4, 20))}`;
+    this.log(`   새 값: ${masked} (${newValue.length}자)`);
 
     if (!flags.yes) {
       this.log('\n계속하려면 --yes 플래그를 사용하세요.');
