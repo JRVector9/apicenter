@@ -9,7 +9,8 @@ export type Language =
   | 'php'
   | 'dotenv'
   | 'docker'
-  | 'github_actions';
+  | 'github_actions'
+  | 'json';
 
 export const EXTENSION_TO_LANGUAGE: Record<string, Language> = {
   '.js': 'javascript',
@@ -26,6 +27,7 @@ export const EXTENSION_TO_LANGUAGE: Record<string, Language> = {
   '.rs': 'rust',
   '.java': 'java',
   '.php': 'php',
+  '.json': 'json',
 };
 
 export const FILENAME_TO_LANGUAGE: Array<{ pattern: RegExp; language: Language }> = [
@@ -111,6 +113,19 @@ export const SCAN_PATTERNS: Record<Language, Array<{ source: string; flags: stri
   ],
   github_actions: [
     { source: String.raw`\$\{\{\s*secrets\.(\w+)\s*\}\}`, flags: 'g' },
+  ],
+  // JSON: 시크릿 키워드로 끝나는 필드명 + 비어있지 않은 문자열 값
+  // auth/type 등 설정 필드 false positive 방지를 위해 trailing \w* 제거
+  json: [
+    {
+      source: String.raw`"(\w*(?:password|token|secret|apikey|api_key|credential|passwd|accesskey))"\s*:\s*"([^"]{4,})"`,
+      flags: 'gi',
+    },
+    // JS 코드 문자열 안 하드코딩: wpPassword: '...' 형태 (n8n 등)
+    {
+      source: String.raw`(\w*(?:Password|Token|Secret|ApiKey|Credential|Passwd|AccessKey))\s*:\s*'([^']{4,})'`,
+      flags: 'g',
+    },
   ],
 };
 

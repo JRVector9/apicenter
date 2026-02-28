@@ -20,6 +20,7 @@ const SOURCE_LANGUAGES = new Set<Language>([
   'rust',
   'java',
   'php',
+  'json',
 ]);
 
 export interface ScanOptions {
@@ -44,6 +45,7 @@ const DEFAULT_INCLUDE = [
   '*.rb',
   '*.go',
   '*.rs',
+  '*.json',
   '.env*',
   'Dockerfile*',
   'docker-compose*.yml',
