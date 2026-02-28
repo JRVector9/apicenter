@@ -72,6 +72,7 @@ export interface ScanMatch {
   file: string;
   line: number;
   language: string;
+  provider?: string; // 값 패턴으로 탐지된 경우 provider명 (예: 'OpenAI', 'AWS')
 }
 
 // scan 명령어 전체 결과

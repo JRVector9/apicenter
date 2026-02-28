@@ -53,14 +53,14 @@ export default class Scan extends BaseCommand {
     }
 
     const table = new Table({
-      head: ['Key', 'Language', 'File:Line'],
+      head: ['Key', 'Provider', 'Language', 'File:Line'],
       style: { head: ['cyan'] },
-      colWidths: [30, 15, 50],
+      colWidths: [30, 15, 15, 50],
       wordWrap: true,
     });
 
     for (const match of result.matches) {
-      table.push([match.key, match.language, `${match.file}:${match.line}`]);
+      table.push([match.key, match.provider ?? '-', match.language, `${match.file}:${match.line}`]);
     }
 
     this.log(table.toString());

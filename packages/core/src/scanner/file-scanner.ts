@@ -6,8 +6,21 @@ import {
   EXTENSION_TO_LANGUAGE,
   FILENAME_TO_LANGUAGE,
   SCAN_PATTERNS,
+  SECRET_VALUE_PATTERNS,
   type Language,
 } from './patterns.js';
+
+// 값 패턴 탐지를 적용할 소스 코드 언어 (dotenv/docker/github_actions 제외)
+const SOURCE_LANGUAGES = new Set<Language>([
+  'javascript',
+  'typescript',
+  'python',
+  'ruby',
+  'go',
+  'rust',
+  'java',
+  'php',
+]);
 
 export interface ScanOptions {
   cwd?: string;
@@ -20,6 +33,12 @@ const DEFAULT_INCLUDE = [
   'app/**',
   'lib/**',
   'config/**',
+  '*.py',
+  '*.js',
+  '*.ts',
+  '*.rb',
+  '*.go',
+  '*.rs',
   '.env*',
   'Dockerfile*',
   'docker-compose*.yml',
@@ -94,6 +113,37 @@ export function scanFileContent(
       );
       if (!alreadyAdded) {
         matches.push({ key, file: relPath, line: lineNumber, language });
+      }
+    }
+  }
+
+  // 값 패턴 탐지 (provider fingerprint) — 소스 코드 언어에만 적용
+  if (SOURCE_LANGUAGES.has(language)) {
+    for (const { provider, keyName, source, flags } of SECRET_VALUE_PATTERNS) {
+      const regex = new RegExp(source, flags);
+      let match: RegExpExecArray | null;
+
+      while ((match = regex.exec(content)) !== null) {
+        const matchIndex = match.index;
+        const linesBefore = content.slice(0, matchIndex).split('\n');
+        const lineNumber = linesBefore.length;
+        const lineContent = lines[lineNumber - 1] ?? '';
+
+        const trimmedLine = lineContent.trim();
+        if (
+          trimmedLine.startsWith('#') ||
+          trimmedLine.startsWith('//') ||
+          trimmedLine.startsWith('--')
+        ) {
+          continue;
+        }
+
+        const alreadyAdded = matches.some(
+          (m) => m.file === relPath && m.line === lineNumber && m.key === keyName,
+        );
+        if (!alreadyAdded) {
+          matches.push({ key: keyName, file: relPath, line: lineNumber, language, provider });
+        }
       }
     }
   }

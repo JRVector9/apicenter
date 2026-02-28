@@ -82,6 +82,111 @@ describe('scanFileContent', () => {
     expect(matches[0]?.key).toBe('MY_SECRET');
   });
 
+  it('Python — 하드코딩된 KEY/TOKEN/SECRET 변수 감지', () => {
+    const content = [
+      'API_KEY = "sk-abcd-c22db3aa789b6e3d41a9cf1b2b08745c09c34d134d059afe"',
+      'AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"',
+      'DB_SECRET = "super-secret-password-123"',
+    ].join('\n');
+    const matches = scanFileContent(content, '/project/core.py', 'python', cwd);
+    const keys = matches.map((m) => m.key);
+    expect(keys).toContain('API_KEY');
+    expect(keys).toContain('AUTH_TOKEN');
+    expect(keys).toContain('DB_SECRET');
+  });
+
+  it('Python — 짧은 값은 하드코딩 시크릿으로 감지하지 않음', () => {
+    const content = `DEBUG_KEY = "abc"`;
+    const matches = scanFileContent(content, '/project/core.py', 'python', cwd);
+    expect(matches.map((m) => m.key)).not.toContain('DEBUG_KEY');
+  });
+
+  it('JavaScript — 하드코딩된 KEY/TOKEN/SECRET 변수 감지', () => {
+    const content = `const API_KEY = "sk-abcd-1234567890abcdef";\nconst AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9";`;
+    const matches = scanFileContent(content, '/project/index.js', 'javascript', cwd);
+    const keys = matches.map((m) => m.key);
+    expect(keys).toContain('API_KEY');
+    expect(keys).toContain('AUTH_TOKEN');
+  });
+});
+
+describe('scanFileContent — 값 패턴 탐지 (provider fingerprint)', () => {
+  const cwd = '/project';
+
+  it('OpenAI API Key 탐지', () => {
+    const content = `key = "sk-abcd1234567890abcdef1234567890abcdef1234567890abcd"`;
+    const matches = scanFileContent(content, '/project/app.py', 'python', cwd);
+    const found = matches.find((m) => m.key === 'OPENAI_API_KEY');
+    expect(found).toBeDefined();
+    expect(found?.provider).toBe('OpenAI');
+  });
+
+  it('AWS Access Key ID 탐지', () => {
+    const content = `aws_key = "AKIAIOSFODNN7EXAMPLE"`;
+    const matches = scanFileContent(content, '/project/app.py', 'python', cwd);
+    const found = matches.find((m) => m.key === 'AWS_ACCESS_KEY_ID');
+    expect(found).toBeDefined();
+    expect(found?.provider).toBe('AWS');
+  });
+
+  it('GitHub PAT 탐지', () => {
+    const content = `token = "ghp_abcdefghijklmnopqrstuvwxyz1234567890"`;
+    const matches = scanFileContent(content, '/project/app.js', 'javascript', cwd);
+    const found = matches.find((m) => m.key === 'GITHUB_TOKEN');
+    expect(found).toBeDefined();
+    expect(found?.provider).toBe('GitHub');
+  });
+
+  it('Stripe Secret Key 탐지', () => {
+    // 테스트용 가짜 값 — GitHub Secret Scanning 우회를 위해 조합
+    const val = ['sk', 'live', 'abcdefghijklmnopqrstuvwx'].join('_');
+    const content = `stripe = "${val}"`;
+    const matches = scanFileContent(content, '/project/app.ts', 'typescript', cwd);
+    const found = matches.find((m) => m.key === 'STRIPE_SECRET_KEY');
+    expect(found).toBeDefined();
+    expect(found?.provider).toBe('Stripe');
+  });
+
+  it('Slack Bot Token 탐지', () => {
+    // 테스트용 가짜 값 — GitHub Secret Scanning 우회를 위해 조합
+    const val = ['xoxb', '123456789012', '123456789012', 'abcdefghijklmnopqrstuvwx'].join('-');
+    const content = `bot = "${val}"`;
+    const matches = scanFileContent(content, '/project/app.py', 'python', cwd);
+    const found = matches.find((m) => m.key === 'SLACK_BOT_TOKEN');
+    expect(found).toBeDefined();
+    expect(found?.provider).toBe('Slack');
+  });
+
+  it('JWT Token 탐지', () => {
+    const content = `token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"`;
+    const matches = scanFileContent(content, '/project/app.go', 'go', cwd);
+    const found = matches.find((m) => m.key === 'JWT_TOKEN');
+    expect(found).toBeDefined();
+    expect(found?.provider).toBe('JWT');
+  });
+
+  it('주석 처리된 값은 스킵', () => {
+    const content = `# key = "AKIAIOSFODNN7EXAMPLE"`;
+    const matches = scanFileContent(content, '/project/app.py', 'python', cwd);
+    expect(matches.find((m) => m.key === 'AWS_ACCESS_KEY_ID')).toBeUndefined();
+  });
+
+  it('dotenv 파일에는 값 패턴 적용 안 함', () => {
+    const content = `TOKEN=ghp_abcdefghijklmnopqrstuvwxyz1234567890`;
+    const matches = scanFileContent(content, '/project/.env', 'dotenv', cwd);
+    // dotenv는 변수명 패턴만 적용 → GITHUB_TOKEN 키 없음
+    expect(matches.find((m) => m.key === 'GITHUB_TOKEN')).toBeUndefined();
+    // 하지만 TOKEN 변수명은 탐지됨
+    expect(matches.find((m) => m.key === 'TOKEN')).toBeDefined();
+  });
+
+  it('provider 필드가 설정됨', () => {
+    const content = `npm_token = "npm_abcdefghijklmnopqrstuvwxyz1234567890"`;
+    const matches = scanFileContent(content, '/project/app.js', 'javascript', cwd);
+    const found = matches.find((m) => m.provider === 'NPM');
+    expect(found?.key).toBe('NPM_TOKEN');
+  });
+
   it('Ruby — ENV["KEY"] 패턴 감지', () => {
     const content = `key = ENV["RAILS_MASTER_KEY"]`;
     const matches = scanFileContent(content, '/project/config/env.rb', 'ruby', cwd);
