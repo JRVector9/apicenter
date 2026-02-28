@@ -33,6 +33,11 @@ const DEFAULT_INCLUDE = [
   'app/**',
   'lib/**',
   'config/**',
+  '**/functions/**', // Deno/Supabase Edge Functions, Firebase Functions (하위 폴더 포함)
+  '**/routes/**',    // SvelteKit, Hono 등
+  '**/handlers/**',  // 서버리스 핸들러
+  '**/api/**',       // API 라우트
+  '**/scripts/**',   // 유틸 스크립트
   '*.py',
   '*.js',
   '*.ts',
@@ -47,13 +52,17 @@ const DEFAULT_INCLUDE = [
 ];
 
 const DEFAULT_EXCLUDE = [
-  'node_modules/**',
-  'dist/**',
-  'build/**',
-  '.git/**',
+  '**/node_modules/**', // 중첩 node_modules 포함 (예: frontend/node_modules)
+  '**/dist/**',
+  '**/build/**',
+  '**/.git/**',
   '**/*.lock',
   '**/*.min.js',
   '**/*.map',
+  '**/__pycache__/**',
+  '**/.next/**',
+  '**/.nuxt/**',
+  '**/.svelte-kit/**',
 ];
 
 export function detectLanguage(filePath: string): Language | undefined {

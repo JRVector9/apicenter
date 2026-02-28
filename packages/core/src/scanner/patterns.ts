@@ -39,6 +39,10 @@ export const SCAN_PATTERNS: Record<Language, Array<{ source: string; flags: stri
   javascript: [
     { source: String.raw`process\.env\.(\w+)`, flags: 'g' },
     { source: String.raw`process\.env\[['"](\w+)['"]\]`, flags: 'g' },
+    // Deno
+    { source: String.raw`Deno\.env\.get\(['"](\w+)['"]`, flags: 'g' },
+    // import.meta.env (Vite/SvelteKit)
+    { source: String.raw`import\.meta\.env\.(\w+)`, flags: 'g' },
     // 하드코딩된 값: const/let/var 변수명에 KEY/TOKEN/SECRET/URL/BASE/HOST/ENDPOINT 등 접미사
     {
       source: String.raw`(?:const|let|var)\s+([A-Z_][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL|URL|BASE|HOST|ENDPOINT))\s*=\s*['"][^'"\n]{8,}['"]`,
@@ -48,6 +52,10 @@ export const SCAN_PATTERNS: Record<Language, Array<{ source: string; flags: stri
   typescript: [
     { source: String.raw`process\.env\.(\w+)`, flags: 'g' },
     { source: String.raw`process\.env\[['"](\w+)['"]\]`, flags: 'g' },
+    // Deno
+    { source: String.raw`Deno\.env\.get\(['"](\w+)['"]`, flags: 'g' },
+    // import.meta.env (Vite/SvelteKit)
+    { source: String.raw`import\.meta\.env\.(\w+)`, flags: 'g' },
     // 하드코딩된 값: const/let/var 변수명에 KEY/TOKEN/SECRET/URL/BASE/HOST/ENDPOINT 등 접미사
     {
       source: String.raw`(?:const|let|var)\s+([A-Z_][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL|URL|BASE|HOST|ENDPOINT))\s*=\s*['"][^'"\n]{8,}['"]`,
@@ -67,6 +75,11 @@ export const SCAN_PATTERNS: Record<Language, Array<{ source: string; flags: stri
   ruby: [
     { source: String.raw`ENV\[['"](\w+)['"]\]`, flags: 'g' },
     { source: String.raw`ENV\.fetch\(['"](\w+)['"]`, flags: 'g' },
+    // 하드코딩된 상수: UPPER_CASE = "..."
+    {
+      source: String.raw`^([A-Z_][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL|URL|BASE|HOST|ENDPOINT))\s*=\s*['"][^'"\n]{8,}['"]`,
+      flags: 'gm',
+    },
   ],
   go: [
     { source: String.raw`os\.Getenv\("(\w+)"\)`, flags: 'g' },
@@ -81,6 +94,13 @@ export const SCAN_PATTERNS: Record<Language, Array<{ source: string; flags: stri
   php: [
     { source: String.raw`\$_ENV\[['"](\w+)['"]\]`, flags: 'g' },
     { source: String.raw`getenv\(['"](\w+)['"]`, flags: 'g' },
+    // define('KEY', 'value') 전역 상수
+    { source: String.raw`define\(['"](\w+(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL|URL|BASE|HOST|ENDPOINT)\w*)['"]`, flags: 'g' },
+    // 하드코딩된 변수: $API_KEY = "..."
+    {
+      source: String.raw`\$([A-Z_][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL|URL|BASE|HOST|ENDPOINT))\s*=\s*['"][^'"\n]{8,}['"]`,
+      flags: 'g',
+    },
   ],
   dotenv: [
     { source: String.raw`^([A-Z_][A-Z0-9_]*)=`, flags: 'gm' },
