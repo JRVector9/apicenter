@@ -92,19 +92,20 @@ export function checkNoHardcodedSecrets(projectDir: string): DoctorCheckResult {
   }
 
   const content = readFileSync(configPath, 'utf-8');
-  // value: "looooooong..." 패턴 탐지
-  const valuePattern = /:\s*["']?([^"'\n]{20,})["']?/g;
+  // value: "looooooong..." 패턴 탐지 ([ \t]* 로 줄바꿈 미포함 공백만 허용)
+  const valuePattern = /:[ \t]*["']?([^"'\n]{20,})["']?/g;
   const suspiciousValues: string[] = [];
 
   let match: RegExpExecArray | null;
   while ((match = valuePattern.exec(content)) !== null) {
     const val = match[1]?.trim() ?? '';
-    // URL, 경로, 일반 문자열 제외
+    // URL, 경로, 일반 문자열, YAML 키-값 쌍 제외
     if (
       val.startsWith('http') ||
       val.startsWith('/') ||
       val.startsWith('$') ||
       val.includes('{{') ||
+      val.includes(':') || // YAML 키가 캡처된 경우 (줄 경계 버그 방어)
       /^[a-z][a-z0-9._-]*\.[a-z]{2,}/.test(val) // 도메인 형태
     ) {
       continue;
