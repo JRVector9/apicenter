@@ -1,6 +1,6 @@
 import { Command, Args } from '@oclif/core';
 import { existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, resolve, relative } from 'node:path';
 import Table from 'cli-table3';
 import { readDotenvFile } from '../../utils/dotenv-io.js';
 import { findProjectDirectories } from '../../utils/workspace-utils.js';
@@ -43,7 +43,7 @@ export default class WorkspaceStatus extends Command {
     });
 
     for (const projectDir of projects) {
-      const name = projectDir.replace(baseDir + '/', '').replace(baseDir, '.') || '.';
+      const name = relative(baseDir, projectDir) || '.';
 
       const hasConfig = existsSync(join(projectDir, 'apicenter.yaml'));
       const hasEnv = existsSync(join(projectDir, '.env'));

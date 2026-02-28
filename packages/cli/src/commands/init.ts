@@ -63,7 +63,8 @@ export default class Init extends Command {
     }
 
     const existing = readFileSync(gitignorePath, 'utf-8');
-    const toAdd = entries.filter((e) => !existing.includes(e));
+    const existingLines = existing.split('\n').map((l) => l.trim());
+    const toAdd = entries.filter((e) => !existingLines.includes(e));
     if (toAdd.length > 0) {
       appendFileSync(gitignorePath, '\n# apicenter\n' + toAdd.join('\n') + '\n');
     }

@@ -1,6 +1,6 @@
 import { Command, Flags, Args } from '@oclif/core';
 import { readFileSync, existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, resolve, relative } from 'node:path';
 import Table from 'cli-table3';
 import { parseConfig } from '@apicenter/core';
 import { writeDotenvFile } from '../../utils/dotenv-io.js';
@@ -71,7 +71,7 @@ export default class WorkspacePull extends Command {
     const results: PullResult[] = [];
 
     for (const projectDir of projects) {
-      const name = projectDir.replace(baseDir + '/', '').replace(baseDir, '.') || '.';
+      const name = relative(baseDir, projectDir) || '.';
       const configPath = join(projectDir, 'apicenter.yaml');
 
       try {
