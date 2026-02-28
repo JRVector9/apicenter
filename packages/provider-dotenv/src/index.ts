@@ -73,10 +73,9 @@ export class DotenvProvider implements SecretProvider {
       if (eqIdx === -1) continue;
       const key = trimmed.slice(0, eqIdx).trim();
       let value = trimmed.slice(eqIdx + 1).trim();
-      if (
-        (value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))
-      ) {
+      if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+      } else if (value.startsWith("'") && value.endsWith("'")) {
         value = value.slice(1, -1);
       }
       if (key) result[key] = value;
@@ -87,6 +86,7 @@ export class DotenvProvider implements SecretProvider {
   private serializeToEnv(secrets: Record<string, string>): string {
     return (
       Object.entries(secrets)
+        .filter(([key]) => key.length > 0 && !key.includes('='))
         .map(([key, value]) => {
           const needsQuote = /[\s#"'\\]/.test(value);
           const formatted = needsQuote ? `"${value.replace(/"/g, '\\"')}"` : value;

@@ -1,6 +1,6 @@
 import { Command, Flags, Args } from '@oclif/core';
 import { writeFileSync, existsSync, appendFileSync, readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, resolve, relative } from 'node:path';
 import Table from 'cli-table3';
 import {
   findProjectDirectories,
@@ -78,7 +78,7 @@ export default class WorkspaceInit extends Command {
     const results: InitResult[] = [];
 
     for (const projectDir of projects) {
-      const name = projectDir.replace(baseDir + '/', '').replace(baseDir, '.') || '.';
+      const name = relative(baseDir, projectDir) || '.';
       const configPath = join(projectDir, 'apicenter.yaml');
 
       if (existsSync(configPath) && !flags.force) {

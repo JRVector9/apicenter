@@ -43,8 +43,16 @@ export abstract class BaseCommand extends Command {
       if (typeof ProviderClass === 'function') {
         return new ProviderClass(providerConfig) as SecretProvider;
       }
-    } catch {
-      // 패키지가 설치되지 않음
+    } catch (err) {
+      const isModuleNotFound =
+        err instanceof Error &&
+        'code' in err &&
+        (err as NodeJS.ErrnoException).code === 'ERR_MODULE_NOT_FOUND';
+      if (!isModuleNotFound) {
+        this.warn(
+          `Provider '${name}' 로드 중 오류: ${err instanceof Error ? err.message : String(err)}`,
+        );
+      }
     }
 
     this.error(

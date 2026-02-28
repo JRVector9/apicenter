@@ -89,7 +89,9 @@ export function buildToolHandlers(cwd: string) {
 
       const display = show_value
         ? value
-        : `${value.slice(0, 4)}${'*'.repeat(Math.min(value.length - 4, 20))}`;
+        : value.length <= 4
+          ? '****'
+          : `${value.slice(0, 4)}${'*'.repeat(Math.min(value.length - 4, 20))}`;
       return {
         content: [
           {
